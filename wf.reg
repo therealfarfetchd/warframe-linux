@@ -42,3 +42,5 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\Software\Wine\DllOverrides]
 "rasapi32"="native"
+"d3dcompiler_43"="native,builtin"
+"d3dcompiler_47"="native,builtin"
