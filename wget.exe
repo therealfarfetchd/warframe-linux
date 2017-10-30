@@ -1,2 +1,3 @@
 #!/bin/bash
-wget -O $4 $3
+wget -O ${4}.tmp $3
+mv ${4}.tmp ${4}
