@@ -1,9 +1,6 @@
 ## Installation Instructions
 
-Please be sure to install wine system dependencies. This can usually be achieved by installing wine on your system through your package manager. Additionally, these extra packages are necessary for wine to run LoL:  
-[League of Legends additional Dependencies](https://wiki.archlinux.org/index.php/League_of_Legends#Install_the_dependencies)
-
-Additional help can be found here:
+Please be sure to install wine system dependencies. This can usually be achieved by installing wine on your system through your package manager.  Additional help can be found here:
 [How to get out of Wine Dependency Hell](https://www.gloriouseggroll.tv/how-to-get-out-of-wine-dependency-hell/)
 
 Option A: Download Lutris. If you have lutris already, please make sure it is updated to version 0.4.13 or higher, as older versions had problems running batch scripts.  Next, run my Lutris install script for warframe:  
