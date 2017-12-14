@@ -27,7 +27,7 @@ ping -n 10 0.0.0.0 > nul
 GOTO CheckForFile
 
 :FoundIt
-start /b /wait "" "%gameDir%\Warframe.exe" -silent -log:/Preprocessing.log -dx10:1 -dx11:0 -threadedworker:0 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate
+start /b /wait "" "%gameDir%\Warframe.exe" -silent -log:/Preprocessing.log -dx10:1 -dx11:0 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate
 msiexec /i Warframe.msi
 
 
