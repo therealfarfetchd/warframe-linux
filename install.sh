@@ -27,6 +27,7 @@ mv EE.cfg ${GAMEDIR}/drive_c/users/${USER}/Local\ Settings/Application\ Data/War
 echo "*************************************************"
 echo "Applying warframe wine prefix registry settings."
 echo "*************************************************"
+sed -i "s/%USERNAME%/"$USER"/g" wf.reg
 WINEDEBUG=-all WINEARCH=win32 WINEPREFIX=$GAMEDIR wine regedit /S wf.reg
 
 
