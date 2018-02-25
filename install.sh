@@ -7,7 +7,7 @@ echo "*************************************************"
 echo "Creating wine prefix and performing winetricks."
 echo "*************************************************"
 
-WINEDEBUG=-all WINEARCH=win32 WINEPREFIX=$GAMEDIR winetricks -q vcrun2015 xact xinput win7
+WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q vcrun2015 xact xinput win7
 
 echo "*************************************************"
 echo "Creating warframe directories."
@@ -28,7 +28,7 @@ echo "*************************************************"
 echo "Applying warframe wine prefix registry settings."
 echo "*************************************************"
 sed -i "s/%USERNAME%/"$USER"/g" wf.reg
-WINEDEBUG=-all WINEARCH=win32 WINEPREFIX=$GAMEDIR wine regedit /S wf.reg
+WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR wine regedit /S wf.reg
 
 
 echo "*************************************************"
@@ -48,7 +48,7 @@ echo "export PULSE_LATENCY_MSEC=60" >> warframe.sh
 echo "export __GL_THREADED_OPTIMIZATIONS=1" >> warframe.sh
 
 echo "cd ${GAMEDIR}/drive_c/Program\ Files/Warframe/" >> warframe.sh
-echo "WINEARCH=win32 WINEPREFIX=$GAMEDIR WINEDEBUG=-all wine cmd /C Warframe-Launcher.bat" >> warframe.sh
+echo "WINEARCH=win64 WINEPREFIX=$GAMEDIR WINEDEBUG=-all wine cmd /C Warframe-Launcher.bat" >> warframe.sh
 
 chmod a+x warframe.sh
 sudo cp ${GAMEDIR}/drive_c/Program\ Files/Warframe/warframe.sh /usr/bin/warframe
