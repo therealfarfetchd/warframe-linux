@@ -7,15 +7,12 @@ unlzma -f index.txt.lzma
 
 sed -i.bak 's/\.lzma.*/.lzma/' index.txt
 
-wget -qN http://content.warframe.com$(grep index.txt -e Warframe.exe.*)
-wget -qN http://content.warframe.com$(grep index.txt -e Warframe.x64.exe.*)
-unlzma -f Warframe.exe.*.lzma
-unlzma -f Warframe.x64.exe.*.lzma
-if [ ! -d "$EXEPREFIX" ];then
-    mkdir --parents "$EXEPREFIX"
-fi
-mv Warframe.x64.exe.* "$EXEPREFIX/Warframe.x64.exe"
-mv Warframe.exe.* "$EXEPREFIX/Warframe.exe"
+while read line
+do
+   curl http://content.warframe.com$line --create-dirs -o "$EXEPREFIX$line"
+   find "$EXEPREFIX" -name '*.lzma' -exec unlzma -f {} \;
+   mv "$EXEPREFIX${line::-5}" "$EXEPREFIX${line::-38}"
+done < index.txt
 
 if [ "$WINEARCH" = "win64" ]; then
     wine "$EXEPREFIX/Warframe.x64.exe" -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate
