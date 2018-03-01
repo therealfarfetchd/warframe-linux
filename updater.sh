@@ -9,9 +9,12 @@ sed -i.bak 's/\.lzma.*/.lzma/' index.txt
 
 while read line
 do
-   curl http://content.warframe.com$line --create-dirs -o "$EXEPREFIX$line"
-   find "$EXEPREFIX" -name '*.lzma' -exec unlzma -f {} \;
-   mv "$EXEPREFIX${line::-5}" "$EXEPREFIX${line::-38}"
+    #FIXME:commented out for now. we will check md5sums eventually
+    #find "$EXEPREFIX" -name '*.*' -type f -exec md5sum {} \; | awk '{print $1}'
+
+    curl http://content.warframe.com$line --create-dirs -o "$EXEPREFIX$line"
+    find "$EXEPREFIX" -name '*.lzma' -exec unlzma -f {} \;
+    mv "$EXEPREFIX${line::-5}" "$EXEPREFIX${line::-38}"
 done < index.txt
 
 if [ "$WINEARCH" = "win64" ]; then
