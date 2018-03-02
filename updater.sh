@@ -2,7 +2,7 @@
 
 EXEPREFIX="$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded/Public"
 
-if [-z "$WINE"]; then
+if [ -z "$WINE" ]; then
     WINECMD=$WINE
 else
     WINECMD=wine
