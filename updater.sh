@@ -58,8 +58,6 @@ done < index.txt
 #cleanup
 rm index.*
 
-cp updater.sh "$WINEPREFIX/drive_c/Program Files/Warframe/updater.exe"
-
 if [ "$WINEARCH" = "win64" ]; then
     wine "$EXEPREFIX/Warframe.x64.exe" -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate
 
