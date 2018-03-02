@@ -2,7 +2,7 @@
 
 EXEPREFIX="$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded/Public"
 
-wget -qN http://content.warframe.com/index.txt.lzma
+curl -s http://content.warframe.com/index.txt.lzma -o "$WINEPREFIX/drive_c/Program Files/Warframe/index.txt.lzma"
 unlzma -f index.txt.lzma
 
 echo "*********************"
@@ -54,6 +54,9 @@ do
         LINECOUNT=0
     fi
 done < index.txt
+
+#cleanup
+rm index.*
 
 cp updater.sh "$WINEPREFIX/drive_c/Program Files/Warframe/updater.exe"
 
