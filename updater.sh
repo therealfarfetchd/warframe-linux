@@ -1,7 +1,7 @@
 #!/bin/bash
 
 EXEPREFIX="$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded/Public"
-
+##TODO use curl instead of wget
 wget -qN http://content.warframe.com/index.txt.lzma
 unlzma -f index.txt.lzma
 
