@@ -58,10 +58,6 @@ done < index.txt
 #cleanup
 rm index.*
 
-#copy updater as exe for lutris and allow it to be executed
-cp updater.sh "$WINEPREFIX/drive_c/Program Files/Warframe/updater.exe"
-chmod a+x updater.exe
-
 if [ "$WINEARCH" = "win64" ]; then
 
     echo "*********************"
