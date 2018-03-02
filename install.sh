@@ -21,7 +21,8 @@ echo "*************************************************"
 cp -R * ${GAMEDIR}/drive_c/Program\ Files/Warframe/ 
 
 cd ${GAMEDIR}/drive_c/Program\ Files/Warframe/
-chmod a+x wget.exe
+chmod a+x updater.exe
+chmod a+x updater.sh
 mv EE.cfg ${GAMEDIR}/drive_c/users/${USER}/Local\ Settings/Application\ Data/Warframe/EE.cfg
 
 echo "*************************************************"
@@ -47,7 +48,7 @@ echo "export MESA_GLTHREAD=TRUE" >> warframe.sh
 
 
 echo "cd ${GAMEDIR}/drive_c/Program\ Files/Warframe/" >> warframe.sh
-echo "WINEARCH=win64 WINEPREFIX=$GAMEDIR WINEDEBUG=-all wine cmd /C Warframe-Launcher.bat" >> warframe.sh
+echo "WINEARCH=win64 WINEPREFIX=$GAMEDIR WINEDEBUG=-all bash updater.sh" >> warframe.sh
 
 chmod a+x warframe.sh
 sudo cp ${GAMEDIR}/drive_c/Program\ Files/Warframe/warframe.sh /usr/bin/warframe
