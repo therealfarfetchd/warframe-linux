@@ -2,7 +2,7 @@
 
 EXEPREFIX="$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded/Public"
 
-WINECMD=${wine-WINE}
+WINECMD=${WINE-wine}
 
 curl -s http://content.warframe.com/index.txt.lzma -o "$WINEPREFIX/drive_c/Program Files/Warframe/index.txt.lzma"
 unlzma -f index.txt.lzma
