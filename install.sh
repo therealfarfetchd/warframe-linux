@@ -37,15 +37,14 @@ echo "*************************************************"
 
 echo "*************************************************"
 echo "Creating warframe shell script"
-echo "This script uses __GL_SHADER_DISK_CACHE=1 and __GL_SHADER_DISK_CACHE_PATH=${GAMEDIR}"
-echo "If you are not installing the game on an SSD hard drive, please remove these two environment variables from /usr/bin/warframe"
-echo "You can do this via sudo nano /usr/bin/warframe"
 echo "*************************************************"
 
 echo "#!/bin/bash" > warframe.sh
 
 echo "export PULSE_LATENCY_MSEC=60" >> warframe.sh
 echo "export __GL_THREADED_OPTIMIZATIONS=1" >> warframe.sh
+echo "export MESA_GLTHREAD=TRUE" >> warframe.sh
+
 
 echo "cd ${GAMEDIR}/drive_c/Program\ Files/Warframe/" >> warframe.sh
 echo "WINEARCH=win64 WINEPREFIX=$GAMEDIR WINEDEBUG=-all wine cmd /C Warframe-Launcher.bat" >> warframe.sh
