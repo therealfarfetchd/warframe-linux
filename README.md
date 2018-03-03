@@ -3,6 +3,8 @@
 Please be sure to install wine system dependencies. This can usually be achieved by installing wine on your system through your package manager.  Additional help can be found here:
 [How to get out of Wine Dependency Hell](https://www.gloriouseggroll.tv/how-to-get-out-of-wine-dependency-hell/)
 
+You will also need to install curl on your system for the updater to work.
+
 Option A: Download Lutris. If you have lutris already, please make sure it is updated to version 0.4.13 or higher, as older versions had problems running batch scripts.  Next, run my Lutris install script for warframe:  
 [Lutris 0.4.13](https://lutris.net/downloads/)  
 [Warframe Install Script for Lutris](https://lutris.net/games/warframe/)  
