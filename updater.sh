@@ -4,14 +4,6 @@ EXEPREFIX="$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded/Public"
 
 WINECMD=${WINE-wine}
 
-if [ "$WINECMD" = "wine" ]; then
-    if [ "$WINEARCH" = "win64" ]; then
-        WINECMD=wine64
-    else
-        WINECMD=wine
-    fi
-fi
-
 wget -qN http://content.warframe.com/index.txt.lzma
 unlzma -f index.txt.lzma
 
@@ -39,18 +31,37 @@ while read line
 do
     MD5SUM=${line: -32:-5}
     MD5SUM=${MD5SUM,,}
-    if [ -f "md5sums.txt" ] && grep -q "$MD5SUM" "md5sums.txt" && [ -f "$EXEPREFIX${line::-38}" ]; then
-        :
-    else
-        #if new md5sum isn't in old md5sum list,check file for old md5sum, remove it from the list, remove blank lines
-        if [ -f "$EXEPREFIX${line::-38}" ]; then
-            OLDMD5SUM=$(md5sum "$EXEPREFIX${line::-38}" | awk '{print $1}')
-            sed -i "/$OLDMD5SUM/,+1 d" md5sums.txt
-            sed -i '/^\s*$/d' md5sums.txt
-        fi
+    if [ -f "md5sums.txt" ]; then
+        if `grep -q "$MD5SUM" "md5sums.txt"`; then
+            if [ -f "$EXEPREFIX${line::-38}" ]; then
+                # if the new line md5 sum is in the current md5 sum list and the file exists, do nothing
+                :
+            else
+                # if the new line md5 sum is in the list, but doesnt exist, download it
+                wget -x -O "$EXEPREFIX$line" http://content.warframe.com$line
+                find "$EXEPREFIX" -name '*.lzma' -exec unlzma -f {} \;
+                mv "$EXEPREFIX${line::-5}" "$EXEPREFIX${line::-38}"
 
+            fi
+        else
+            #if new md5sum isn't in old md5sum list,check file for old md5sum, remove it from the list, remove blank lines
+            if [ -f "$EXEPREFIX${line::-38}" ]; then
+                OLDMD5SUM=$(md5sum "$EXEPREFIX${line::-38}" | awk '{print $1}')
+                sed -i "/$OLDMD5SUM/,+1 d" md5sums.txt
+                sed -i '/^\s*$/d' md5sums.txt
+            fi
+
+            wget -x -q -O "$EXEPREFIX$line" http://content.warframe.com$line
+            find "$EXEPREFIX" -name '*.lzma' -exec unlzma -f {} \;
+            mv "$EXEPREFIX${line::-5}" "$EXEPREFIX${line::-38}"
+
+            #add new md5sum to md5sums list.
+            echo "$MD5SUM" >> "md5sums.txt"
+        fi
+    else
+        #if no md5sum list exists, download all files and log md5sums
         #download new file,unlzma it, move it to correct folder
-        curl -s http://content.warframe.com$line --create-dirs -o "$EXEPREFIX$line"
+        wget -x -q -O "$EXEPREFIX$line" http://content.warframe.com$line
         find "$EXEPREFIX" -name '*.lzma' -exec unlzma -f {} \;
         mv "$EXEPREFIX${line::-5}" "$EXEPREFIX${line::-38}"
 
@@ -65,7 +76,7 @@ do
     fi
 done < index.txt
 
-#cleanup
+# cleanup
 rm index.*
 
 if [ "$WINEARCH" = "win64" ]; then
