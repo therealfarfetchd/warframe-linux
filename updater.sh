@@ -12,7 +12,7 @@ if [ "$WINECMD" = "wine" ]; then
     fi
 fi
 
-curl -s http://content.warframe.com/index.txt.lzma -o "$WINEPREFIX/drive_c/Program Files/Warframe/index.txt.lzma"
+wget -qN http://content.warframe.com/index.txt.lzma
 unlzma -f index.txt.lzma
 
 echo "*********************"
