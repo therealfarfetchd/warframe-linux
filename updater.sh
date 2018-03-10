@@ -15,88 +15,135 @@ echo "*********************"
 
 find "$EXEPREFIX" -name '*.lzma' -exec rm {} \;
 
-sed -i.bak 's/\.lzma.*/.lzma/' index.txt
-if [ -d "$EXEPREFIX" ] && [ ! -f "md5sums.txt" ]; then
-    find "$EXEPREFIX" -name '*.*' -type f -exec md5sum {} \; | awk '{print $1}' > md5sums.txt;
-fi
+#keep wget as a backup in case curl fails
+#wget -qN http://origin.warframe.com/index.txt.lzma
+curl -s http://origin.warframe.com/index.txt.lzma -o index.txt.lzma
+unlzma -f index.txt.lzma
+
+
+echo "*********************"
+echo "Checking for updates."
+echo "*********************"
+
+#remove old downloaded archives
+find "$EXEPREFIX" -name '*.lzma' -exec rm {} \;
+
+#create list of all files to download
+rm -f updates.txt
+touch updates.txt
+while read -r line; do
+	# get the raw filename with md5sum and lzma extension
+	RAW_FILENAME=$(echo $line | awk -F, '{print $1}')
+	# path to local file currently tested
+	LOCAL_PATH="$EXEPREFIX${RAW_FILENAME:0:-38}"
+
+	#check if local_index.txt exists
+	if [ -f "local_index.txt" ]; then
+		#if local index exists, check if new entry is in it
+		if grep -q "$RAW_FILENAME" "local_index.txt"; then
+			#if it's in the list, check if the file exists already
+			if [ ! -f "$LOCAL_PATH" ]; then
+				# if file doesnt exist, add it to download list
+				echo "$line" >> updates.txt
+			fi
+		else
+			#if new md5sum isn't in local index list, add it to download list
+			echo "$line" >> updates.txt
+		fi
+	else
+		#if no md5sum list exists, download all files and log md5sums
+		echo "$line" >> updates.txt
+	fi
+done < index.txt
+
+# sum up total size of updates
+TOTAL_SIZE=0
+while read -r line; do
+	# get the remote size of the lzma file when downloading
+	REMOTE_SIZE=$(echo $line | awk -F, '{print $2}' | sed 's/\r//')
+	(( TOTAL_SIZE+=$REMOTE_SIZE ))
+done < updates.txt
 
 echo "*********************"
 echo "Downloading updates."
 echo "*********************"
 
-PROGRESS=$(wc -l index.txt)
-PROGRESS=$((${PROGRESS::-10}/100))
-LINECOUNT=0
+#currently downloaded size
+CURRENT_SIZE=0
 PERCENT=0
-
 while read -r line; do
+	#get the raw filename with md5sum and lzma extension
+	RAW_FILENAME=$(echo $line | awk -F, '{print $1}')
+	#get the remote size of the lzma file when downloading
+	REMOTE_SIZE=$(echo $line | awk -F, '{print $2}' | sed 's/\r//')
+	#get the md5 sum from the current line
+	MD5SUM=${RAW_FILENAME: -37:-5}
+	#convert it to lower case
+	MD5SUM=${MD5SUM,,}
+	#path to local file currently tested
+	LOCAL_FILENAME="${RAW_FILENAME:0:-38}"
+	LOCAL_PATH="$EXEPREFIX${LOCAL_FILENAME}"
+	#URL where to download the latest file
+	DOWNLOAD_URL="http://content.warframe.com$RAW_FILENAME"
+	#path to local file to be downloaded
+	LZMA_PATH="$EXEPREFIX${RAW_FILENAME}"
+	#path to downloaded and extracted file
+	EXTRACTED_PATH="$EXEPREFIX${RAW_FILENAME:0:-5}"
 
-    #get the md5 sum from the current line
-    MD5SUM=${line: -37:-5}
-    #convert it to lower case
-    MD5SUM=${MD5SUM,,}
+	#variable to specify whether to download current file or not
+	do_update=true
 
-    #check if md5sums.txt exists
-    if [ -f "md5sums.txt" ]; then
-        #if md5sums.txt exists, check if new md5sum is in it
-        if grep -q "$MD5SUM" "md5sums.txt"; then
+	if [ -f "$LOCAL_PATH" ]; then
+		#local file exists
 
-            #if it's in the list, check if the file exists already
-            if [ ! -f "$EXEPREFIX${line:0:-38}" ]; then
+		#check md5sum of local file
+		OLDMD5SUM=$(md5sum "$LOCAL_PATH" | awk '{print $1}')
 
-                # if file doesnt exist, download it
-                #keep wget as a backup in case curl fails
-                #wget -x -O "$EXEPREFIX$line" http://content.warframe.com$line
-                curl -s http://content.warframe.com$line --create-dirs -o "$EXEPREFIX$line"
-                find "$EXEPREFIX" -name '*.lzma' -exec unlzma -f {} \;
-                mv "$EXEPREFIX${line:0:-5}" "$EXEPREFIX${line:0:-38}"
+		if [ "$OLDMD5SUM" = "$MD5SUM" ]; then
+			#nothing to do
+			do_update=false
+		else
+			#md5sum mismatch, download new file
+			do_update=true
+		fi
+	else
+		# local file does not exist
+		do_update=true
+	fi
 
-            fi
-        else
-            #if new md5sum isn't in md5sum list,check if the file exists
-            if [ -f "$EXEPREFIX${line:0:-38}" ]; then
-                #if the file already exists, get its current md5 sum
-                OLDMD5SUM=$(md5sum "$EXEPREFIX${line:0:-38}" | awk '{print $1}')
+	if [ -f local_index.txt ]; then
+		#remove old local_index entry
+		sed -i "\#${LOCAL_FILENAME}.*#,+1 d" local_index.txt
 
-                #then remove it from the md5sum list
-                sed -i "/$OLDMD5SUM/,+1 d" md5sums.txt
+		#also remove blank lines
+		sed -i '/^\s*$/d' local_index.txt
+	fi
 
-                #also remove blank lines
-                sed -i '/^\s*$/d' md5sums.txt
-            fi
+	#do download
+	if [ "$do_update" = true ]; then
+		#show progress percentage for each downloading file
+		echo -ne "$PERCENT% ($CURRENT_SIZE/$TOTAL_SIZE) Downloading ${REMOTE_SIZE} ${RAW_FILENAME}                                   " "\r";
 
-            #then download new file
-            #keep wget as a backup in case curl fails
-            #wget -x -q -O "$EXEPREFIX$line" http://content.warframe.com$line
-            curl -s http://content.warframe.com$line --create-dirs -o "$EXEPREFIX$line"
-            find "$EXEPREFIX" -name '*.lzma' -exec unlzma -f {} \;
-            mv "$EXEPREFIX${line:0:-5}" "$EXEPREFIX${line:0:-38}"
+		#download file and replace old file
+		#keep wget as a backup in case curl fails
+		#wget -x -O "$EXEPREFIX$line" http://content.warframe.com$line
+		curl -s $DOWNLOAD_URL --create-dirs -o "$LZMA_PATH"
+		unlzma -f "$LZMA_PATH"
+		mv "$EXTRACTED_PATH" "$LOCAL_PATH"
+	fi
 
-            #and add new md5sum to md5sums.txt
-            echo "$MD5SUM" >> "md5sums.txt"
-        fi
-    else
+	#update local index
+	echo "$line" | sed 's/\r//' >> local_index.txt
 
-        #if no md5sum list exists, download all files and log md5sums
-        #keep wget as a backup in case curl fails
-        #wget -x -q -O "$EXEPREFIX$line" http://content.warframe.com$line
-        curl -s http://content.warframe.com$line --create-dirs -o "$EXEPREFIX$line"
-        find "$EXEPREFIX" -name '*.lzma' -exec unlzma -f {} \;
-        mv "$EXEPREFIX${line:0:-5}" "$EXEPREFIX${line:0:-38}"
-        echo "$MD5SUM" >> "md5sums.txt"
-
-    fi
-
-    #show progress percentage
-    (( LINECOUNT+=1 ))
-    if (( LINECOUNT > PROGRESS )) && (( PERCENT < 101 )); then
-        (( PERCENT+=1 ))
-        echo -ne "$PERCENT% Downloading $EXEPREFIX${line:0:-38}                                   " "\r";
-        LINECOUNT=0
-    fi
-done < index.txt
+	#update progress percentage
+	(( CURRENT_SIZE+=$REMOTE_SIZE ))
+	PERCENT=$(( ${CURRENT_SIZE}*100/${TOTAL_SIZE} ))
+done < updates.txt
+#print finished message
+echo "$PERCENT% ($CURRENT_SIZE/$TOTAL_SIZE) Finished downloads"
 
 # cleanup
+rm updates.txt
 rm index.*
 
 if [ "$WINEARCH" = "win64" ]; then
