@@ -9,13 +9,7 @@ then
 else
   USE_DXVK=0
 fi
-#USE_DXVK=0 # force it to not use dxvk
-
-WTVERBS='vcrun2015 xact xinput win7'
-if [ $USE_DXVK -ne 0 ]
-then
-  WTVERBS='vcrun2015 win7'
-fi
+USE_DXVK=0 # force it to not use dxvk
 
 SHARE="${HOME}/.local/share"
 
@@ -23,7 +17,7 @@ echo "*************************************************"
 echo "Creating wine prefix and performing winetricks."
 echo "*************************************************"
 
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q $WTVERBS
+WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q vcrun2015 xact xinput win7
 
 test $USE_DXVK -ne 0 && WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR setup_dxvk64
 
