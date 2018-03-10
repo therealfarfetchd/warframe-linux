@@ -61,7 +61,6 @@ TOTAL_SIZE=0
 while read -r line; do
 	# get the remote size of the lzma file when downloading
 	REMOTE_SIZE=$(echo $line | awk -F, '{print $2}' | sed 's/\r//')
-	echo "'$REMOTE_SIZE'"
 	(( TOTAL_SIZE+=$REMOTE_SIZE ))
 done < updates.txt
 
