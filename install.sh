@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change to your preferred installation directory
-GAMEDIR="${HOME}/Games/Warframe"
+GAMEDIR="${HOME}/.local/share/Warframe"
 
 if which setup_dxvk64 > /dev/null 2> /dev/null
 then
@@ -16,6 +16,8 @@ SHARE="${HOME}/.local/share"
 echo "*************************************************"
 echo "Creating wine prefix and performing winetricks."
 echo "*************************************************"
+
+echo $GAMEDIR > "$SHARE/warframe-instdir"
 
 WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q vcrun2015 xact xinput win7
 
