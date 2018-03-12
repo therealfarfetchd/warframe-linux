@@ -75,15 +75,6 @@ fi
 # update game files
 #############################################################
 if [ "$do_update" = true ] ; then
-	#keep wget as a backup in case curl fails
-	#wget -qN http://origin.warframe.com/index.txt.lzma
-	curl -s http://origin.warframe.com/index.txt.lzma -o "$WINEPREFIX/drive_c/Program Files/Warframe/index.txt.lzma"
-	unlzma -f index.txt.lzma
-
-	echo "*********************"
-	echo "Checking for updates."
-	echo "*********************"
-
 	find "$EXEPREFIX" -name '*.lzma' -exec rm {} \;
 
 	#keep wget as a backup in case curl fails
@@ -193,12 +184,12 @@ if [ "$do_update" = true ] ; then
 		#do download
 		if [ "$do_update" = true ]; then
 			#show progress percentage for each downloading file
-			echo -ne "$PERCENT% ($CURRENT_SIZE/$TOTAL_SIZE) Downloading ${REMOTE_SIZE} ${RAW_FILENAME}                                   " "\r";
+			echo "Total update progress: $PERCENT% Downloading $LOCAL_PATH"
 
 			#download file and replace old file
 			#keep wget as a backup in case curl fails
 			#wget -x -O "$EXEPREFIX$line" http://content.warframe.com$line
-			curl -s $DOWNLOAD_URL --create-dirs -o "$LZMA_PATH"
+			curl $DOWNLOAD_URL --create-dirs -o "$LZMA_PATH"
 			unlzma -f "$LZMA_PATH"
 			mv "$EXTRACTED_PATH" "$LOCAL_PATH"
 		fi
