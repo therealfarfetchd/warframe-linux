@@ -52,8 +52,6 @@ These settings are disabled in the launcher to prevent crashing and for better p
 
 ```
   64-bit mode
-  Launcher GPU Acceleration
-  Multithreading (this is handled by csmt instead. Game's MT causes artifacting)
 ```
 
 These settings are disabled by default to reduce gameplay stuttering and/or graphical glitches:  

@@ -88,7 +88,7 @@ then
 	echo "Exec=${HOME}/bin/warframe \"\$@\"" >> warframe.desktop
 	echo "Icon=${SHARE}/pixmaps/warframe.png" >> warframe.desktop
 	echo "StartupNotify=true" >> warframe.desktop
-	echo "Terminal=false" >> warframe.desktop
+	echo "Terminal=true" >> warframe.desktop
 	echo "Type=Application" >> warframe.desktop
 	echo "Categories=Application;Game" >> warframe.desktop
 
