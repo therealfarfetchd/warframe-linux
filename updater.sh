@@ -6,20 +6,15 @@ EXEPREFIX="$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded/Public"
 
 WINECMD=${WINE-wine}
 
-
-#This is temporary until it can be confirmed that 64 bit exe is causing crashes.
-
 # determine wich Warframe exe to run
-#if [ "$WINEARCH" = "win64" ]; then
-#	WARFRAME_EXE="$EXEPREFIX/Warframe.x64.exe"
-#else
-#	WARFRAME_EXE="$EXEPREFIX/Warframe.exe"
-#fi
-
-WARFRAME_EXE="$EXEPREFIX/Warframe.exe"
+if [ "$WINEARCH" = "win64" ]; then
+	WARFRAME_EXE="$EXEPREFIX/Warframe.x64.exe"
+else
+	WARFRAME_EXE="$EXEPREFIX/Warframe.exe"
+fi
 
 #this is temporary until we can find out why both exes are getting corrupted and not launchable after closing
-find "$EXEPREFIX" -name 'Warframe.*' -exec rm {} \;
+#find "$EXEPREFIX" -name 'Warframe.*' -exec rm {} \;
 
 function print_synopsis {
 	echo "$0 [options]"
