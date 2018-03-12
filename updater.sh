@@ -184,7 +184,7 @@ if [ "$do_update" = true ] ; then
 		#do download
 		if [ "$do_update" = true ]; then
 			#show progress percentage for each downloading file
-			echo "Total update progress: $PERCENT% Downloading $LOCAL_PATH"
+			echo "Total update progress: $PERCENT% Downloading: ${RAW_FILENAME:0:-38}"
 
 			#download file and replace old file
 			#keep wget as a backup in case curl fails
