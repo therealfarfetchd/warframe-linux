@@ -190,12 +190,13 @@ if [ "$do_update" = true ] ; then
 			#keep wget as a backup in case curl fails
 			#wget -x -O "$EXEPREFIX$line" http://content.warframe.com$line
 			curl $DOWNLOAD_URL --create-dirs -o "$LZMA_PATH"
+			echo "Extracting file. This can take some time for large files."
 			unlzma -f "$LZMA_PATH"
 			mv "$EXTRACTED_PATH" "$LOCAL_PATH"
 		fi
 
 		#update local index
-		echo "$line" | sed 's/\r//' >> local_index.txt
+		echo "$line" >> local_index.txt
 
 		#update progress percentage
 		(( CURRENT_SIZE+=$REMOTE_SIZE ))
