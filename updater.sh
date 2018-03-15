@@ -2,6 +2,11 @@
 # exit on first error
 set -e
 
+# create folders if they don't exist
+if [ ! -d "$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded" ]; then
+  mkdir -p "$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded/Public"
+fi
+
 EXEPREFIX="$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded/Public"
 
 WINECMD=${WINE-wine}
