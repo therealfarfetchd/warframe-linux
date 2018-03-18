@@ -7,7 +7,7 @@ echo "*************************************************"
 echo "Creating wine prefix and performing winetricks."
 echo "*************************************************"
 
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q vcrun2015 xact xinput win7
+WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q vcrun2013 vcrun2015 devenum xact xinput quartz win7
 
 echo "*************************************************"
 echo "Creating warframe directories."
