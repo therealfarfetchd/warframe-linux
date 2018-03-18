@@ -2,6 +2,11 @@
 # exit on first error
 set -e
 
+# create folders if they don't exist
+if [ ! -d "$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded" ]; then
+  mkdir -p "$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded/Public"
+fi
+
 EXEPREFIX="$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded/Public"
 
 WINECMD=${WINE-wine}
@@ -194,10 +199,8 @@ if [ "$do_update" = true ] ; then
 			#download file and replace old file
 			#keep wget as a backup in case curl fails
 			#wget -x -O "$EXEPREFIX$line" http://content.warframe.com$line
-			curl $DOWNLOAD_URL --create-dirs -o "$LZMA_PATH"
-			echo "Extracting file. This can take some time for large files."
-			unlzma -f "$LZMA_PATH"
-			mv "$EXTRACTED_PATH" "$LOCAL_PATH"
+			mkdir -p "$(dirname "$LOCAL_PATH")"
+			curl $DOWNLOAD_URL | unlzma - > "$LOCAL_PATH"
 		fi
 
 		#update local index
