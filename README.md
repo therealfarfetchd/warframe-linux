@@ -10,7 +10,7 @@ Option A: Download Lutris. If you have lutris already, please make sure it is up
 [Warframe Install Script for Lutris](https://lutris.net/games/warframe/)  
 
 Option B: Without Lutris:  
-1. Install wine-staging 2.17 (or higher) for your linux distribution.  
+1. Install wine-staging 3.3 (or higher) for your linux distribution.  
 
 2. Download a copy of my warframe wine wrapper repo and extract it somewhere: [warframe-linux-master](https://github.com/GloriousEggroll/warframe-linux/archive/master.zip)  
 
