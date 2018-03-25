@@ -19,7 +19,7 @@ echo "*************************************************"
 
 echo $GAMEDIR > "$SHARE/warframe-instdir"
 
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q vcrun2015 xact xinput win7
+WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q vcrun2015 devenum xact xinput quartz win7
 
 test $USE_DXVK -ne 0 && WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR setup_dxvk64
 
@@ -86,7 +86,6 @@ then
 	echo "Encoding=UTF-8" >> warframe.desktop
 	echo "Name=Warframe" >> warframe.desktop
 	echo "GenericName=Warframe" >> warframe.desktop
-	echo "Warframe" >> warframe.desktop
 	echo "Exec=${HOME}/bin/warframe \"\$@\"" >> warframe.desktop
 	echo "Icon=${SHARE}/pixmaps/warframe.png" >> warframe.desktop
 	echo "StartupNotify=true" >> warframe.desktop
