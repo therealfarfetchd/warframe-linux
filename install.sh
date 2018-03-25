@@ -7,7 +7,7 @@ echo "*************************************************"
 echo "Creating wine prefix and performing winetricks."
 echo "*************************************************"
 
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q vcrun2013 vcrun2015 devenum xact xinput quartz win7
+WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q vcrun2015 devenum xact xinput quartz win7
 
 echo "*************************************************"
 echo "Creating warframe directories."
@@ -69,7 +69,6 @@ then
 	echo "Encoding=UTF-8" >> warframe.desktop
 	echo "Name=Warframe" >> warframe.desktop
 	echo "GenericName=Warframe" >> warframe.desktop
-	echo "Warframe" >> warframe.desktop
 	echo "Exec=/usr/bin/warframe \"\$@\"" >> warframe.desktop
 	echo "Icon=/usr/share/pixmaps/warframe.png" >> warframe.desktop
 	echo "StartupNotify=true" >> warframe.desktop
